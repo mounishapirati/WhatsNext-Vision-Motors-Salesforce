@@ -1,58 +1,74 @@
-# Salesforce DX Project
+# WhatsNext Vision Motors – Salesforce CRM
 
-Salesforce DX is a development approach that brings source-driven development, team collaboration, and continuous integration to the Salesforce Platform. Instead of working directly in an org through a web browser, you work with metadata as source files in a local DX project, track changes in version control, and deploy through automated processes.
+WhatsNext Vision Motors is a Salesforce-based CRM solution designed to streamline vehicle sales, dealer management, customer management, vehicle orders, test drives, and service requests.
 
-This project template gets you started with the tools and structure you need to build Salesforce applications using source control, scratch orgs, and the Salesforce CLI.
+The project uses Salesforce DX, Apex, Record-Triggered Flows, Batch Apex, Scheduled Apex, Reports, Dashboards, and Salesforce metadata to automate vehicle ordering and dealership workflows.
 
 ## Prerequisites
 
 Before you start, make sure you have:
 
-- **Salesforce CLI** - Download from [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli). See [Install Salesforce CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) for details.
-- **VS Code with Salesforce Extension Pack** - See [Installation Instructions](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide/install.html) for details. Includes the Agentforce Vibes extension.
-- **A development org** - Sign up for a free Developer Edition org [here](https://developer.salesforce.com/signup).
-- **Dev Hub enabled** (optional, required to create scratch orgs) - You can enable Dev Hub in your development org under Setup > Dev Hub.  See [Provide Developers Access to Salesforce DX Tools](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_setup_dx_tools.htm).
+- **Salesforce CLI** - Install Salesforce CLI for deploying and retrieving Salesforce metadata.
+- **VS Code with Salesforce Extension Pack** - Recommended for Salesforce development and metadata management.
+- **Salesforce Developer Edition Org** - A Salesforce development org for configuring and testing the application.
+- **Git and GitHub** - Used for source control, version management, and project collaboration.
+- **Salesforce DX Project** - The project follows the Salesforce DX source-driven project structure.
 
 ## Project Structure
 
-Your DX project follows this structure:
+The project follows the Salesforce DX structure:
 
-- **`force-app/main/default/`** - Your metadata source files live in this default package directory. You can configure additional package directories in the `sfdx-project.json` file.
-- **`config/`** - Scratch org definitions and project settings
-- **`scripts/`** - Automation scripts for common tasks
-- **`sfdx-project.json`** - Project manifest that defines package directories, namespace, API version, and other project-level settings
+- **`force-app/main/default/`** - Contains Salesforce metadata such as Apex classes, triggers, custom objects, fields, flows, and applications.
+- **`force-app/main/default/classes/`** - Contains Apex classes for business logic, batch processing, and scheduling.
+- **`force-app/main/default/triggers/`** - Contains Apex triggers.
+- **`force-app/main/default/objects/`** - Contains custom objects, fields, relationships, and list views.
+- **`force-app/main/default/flows/`** - Contains Salesforce Flow automation.
+- **`force-app/main/default/applications/`** - Contains the WhatsNext Vision Motors Lightning application.
+- **`manifest/`** - Contains package manifests used for selective metadata retrieval and deployment.
+- **`sfdx-project.json`** - Defines Salesforce DX project configuration and package directories.
 
-See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm).
+## Custom Objects
 
-## Get Started
+The project contains the following custom Salesforce objects:
 
-Ready to start developing? The [Get Started with Salesforce DX](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_get_started_dx.htm) guide walks you through your first project, from creating a scratch org to creating a simple Apex class or LWC to deploying your code to a sandbox.
+- **Vehicle__c** - Stores vehicle information, pricing, stock quantity, model, dealer, and availability.
+- **Vehicle_Dealer__c** - Stores authorized dealer information including location, contact details, and dealer code.
+- **Vehicle_Customer__c** - Stores customer information such as name, email, phone, address, and preferred vehicle type.
+- **Vehicle_Order__c** - Tracks customer vehicle orders and their status.
+- **Vehicle_Test_Drive__c** - Manages vehicle test-drive bookings and schedules.
+- **Vehicle_Service_Request__c** - Manages customer vehicle service requests.
 
-## Common Salesforce CLI Commands
+## Key Features
 
-Here are common CLI commands that you'll use the most:
+The WhatsNext Vision Motors CRM provides:
 
-- `sf org login web`: Authorize an org
-- `sf org open`: Open your org in a browser
-- `sf org create scratch`: Create a scratch org
-- `sf project deploy start`: Deploy metadata to your org
-- `sf project retrieve start`: Retrieve metadata from your org
-- `sf template generate <artifact>`: Scaffold new components, such as Apex classes and triggers, LWC components, Lightning apps, and more
-- `sf apex <command>`: Run Apex tests, run anonymous Apex blocks, and view logs
-- `sf data <command>`: Work with test data
-- `sf alias <command>`: Manage org aliases
-- `sf config <command>`: Configure CLI settings
+- **Automatic Dealer Assignment** - Assigns a dealer to vehicle orders based on customer and dealer location.
+- **Vehicle Stock Management** - Maintains vehicle inventory and stock quantities.
+- **Out-of-Stock Validation** - Prevents vehicle orders from being confirmed when stock is unavailable.
+- **Automatic Order Confirmation** - Confirms pending orders when vehicle stock becomes available.
+- **Automatic Stock Reduction** - Decreases vehicle stock when an order is confirmed.
+- **Test Drive Management** - Allows scheduled test drives to be managed through Salesforce.
+- **Test Drive Email Reminders** - Sends reminder emails before scheduled test drives.
+- **Order Confirmation Emails** - Sends confirmation emails when vehicle orders are confirmed.
+- **Batch Processing** - Processes pending vehicle orders when stock becomes available.
+- **Scheduled Processing** - Automatically runs batch processing on a scheduled basis.
+- **Reports and Dashboards** - Provides visibility into inventory, orders, test drives, and service requests.
 
-## Use Agentforce Vibes to Build Lightning Apps
+## Salesforce Automation
 
-Transform your ideas into custom Lightning apps that extend CRM workflows directly in Lightning Experience. Through natural conversations with Agentforce Vibes, implement custom objects and fields, complex business logic, and dynamic UI components. See [Build a Lightning App Using Agentforce Vibes](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/lexapp-overview.html).
+The project uses Salesforce automation to manage business processes.
 
-## Additional Resources
+### Auto Assign Dealer Flow
 
-- [Agentforce Vibes Developer Guide](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/einstein-overview.html)
-- [Salesforce CLI Installation Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/)
-- [Salesforce CLI Plugin Development Guide](https://developer.salesforce.com/docs/platform/salesforce-cli-plugin/guide/conceptual-overview.html)
-- [Salesforce VS Code Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
+Automatically assigns a dealer to a vehicle order based on the customer's location.
 
+```text
+Vehicle Order
+      ↓
+Get Customer Information
+      ↓
+Get Nearest Dealer
+      ↓
+Assign Dealer to Order
+      ↓
+End
