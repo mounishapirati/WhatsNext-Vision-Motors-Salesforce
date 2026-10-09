@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <name>Send_Order_Cancellation_Email</name>
+        <label>Send Order Cancellation Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recipientAddresses</name>
+            <value>
+                <collectionElements>
+                    <elementReference>Get_Customer_for_Cancellation_Email.Email__c</elementReference>
+                </collectionElements>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <inputConfiguratorMode>Custom</inputConfiguratorMode>
+                <stringValue>Your Vehicle Order Has Been Canceled</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <inputConfiguratorMode>Custom</inputConfiguratorMode>
+                <stringValue>Dear Customer,
+
+We regret to inform you that your vehicle order has been canceled because the selected vehicle is currently out of stock.
+
+Cancellation Reason: Vehicle is out of stock.
+
+Your order status has been updated to Canceled.
+
+We apologize for the inconvenience.
+
+Regards,
+WhatsNext Vision Motors</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <offset>0</offset>
+        <versionString>3.0.1</versionString>
+    </actionCalls>
+    <actionCalls>
         <name>Send_Order_Confirmation_Email</name>
         <label>Send Order Confirmation Email</label>
         <locationX>0</locationX>
@@ -33,7 +84,18 @@
             <name>emailBody</name>
             <value>
                 <inputConfiguratorMode>Custom</inputConfiguratorMode>
-                <stringValue>&lt;p&gt;Dear Customer,&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;We are pleased to inform you that your vehicle order has been confirmed successfully.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Your vehicle is now reserved for you.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Order Status: Confirmed&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Thank you for choosing WhatsNext Vision Motors.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Regards,&lt;/p&gt;&lt;p&gt;WhatsNext Vision Motors&lt;/p&gt;</stringValue>
+                <stringValue>Dear Customer,
+
+We are pleased to inform you that your vehicle order has been confirmed successfully.
+
+Your vehicle is now reserved for you.
+
+Order Status: Confirmed
+
+Thank you for choosing WhatsNext Vision Motors.
+
+Regards,
+WhatsNext Vision Motors</stringValue>
             </value>
         </inputParameters>
         <nameSegment>emailSimple</nameSegment>
@@ -47,6 +109,9 @@
         <label>Check Vehicle Stock</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Cancel_Out_of_Stock_Order</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>Stock Not available</defaultConnectorLabel>
         <rules>
             <name>Stock_Available</name>
@@ -93,6 +158,27 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
+        <name>Get_Customer_for_Cancellation_Email</name>
+        <label>Get Customer for Cancellation Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Send_Order_Cancellation_Email</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Customer__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Vehicle_Customer__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_Customer_Information</name>
         <label>Get Customer Information</label>
         <locationX>0</locationX>
@@ -135,6 +221,22 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
+        <name>Cancel_Out_of_Stock_Order</name>
+        <label>Cancel Out-of-Stock Order</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Customer_for_Cancellation_Email</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Canceled</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
         <name>Confirm_Order</name>
         <label>Confirm Order</label>
         <locationX>0</locationX>
@@ -169,4 +271,9 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <textTemplates>
+        <name>Cancelled</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Vehicle is out of stock. The order cannot be fulfilled at this time.&lt;/p&gt;</text>
+    </textTemplates>
 </Flow>
